@@ -1,7 +1,8 @@
 use std::cmp::Ordering;
 use std::sync::Arc;
 use bytes::Buf;
-use crate::block::Block;
+use crate::block::{Block, SIZEOF_U16};
+use crate::utils::two_u8_to_u16;
 
 /// Iterates on a block.
 pub struct BlockIterator {
@@ -88,14 +89,14 @@ impl BlockIterator {
     }
 
     fn seek_to_offset(&mut self, offset: usize) {
-        let key_len_bytes = &self.block.data[offset..(offset + 2)];
-        let key_len = (((key_len_bytes[0] as u16) << 8) | key_len_bytes[1] as u16) as usize; // [u8,2] -> u16
-        let key = &self.block.data[(offset + 2)..(offset + 2 + key_len)];
-        let value_len_bytes = &self.block.data[(offset + 2 + key_len)..(offset + 2 + key_len + 2)];
-        let value_len = (((value_len_bytes[0] as u16) << 8) | value_len_bytes[1] as u16) as usize;
-        let value = &self.block.data[(offset + 2 + key_len + 2)..(offset + 2 + key_len + 2 + value_len)];
-        self.key = Vec::from(key);
-        self.value = Vec::from(value);
+        let key_len_bytes = &self.block.data[offset..(offset + SIZEOF_U16)];
+        let key_len = two_u8_to_u16(key_len_bytes) as usize;
+        let key = &self.block.data[(offset + SIZEOF_U16)..(offset + SIZEOF_U16 + key_len)];
+        let value_len_bytes = &self.block.data[(offset + SIZEOF_U16 + key_len)..(offset + SIZEOF_U16 + key_len + SIZEOF_U16)];
+        let value_len = two_u8_to_u16(value_len_bytes) as usize;
+        let value = &self.block.data[(offset + SIZEOF_U16 + key_len + SIZEOF_U16)..(offset + SIZEOF_U16 + key_len + SIZEOF_U16 + value_len)];
+        self.key = key.to_vec();
+        self.value = value.to_vec();
     }
 
 }

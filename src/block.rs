@@ -3,7 +3,8 @@ mod iterator;
 
 pub use builder::BlockBuilder;
 pub use iterator::BlockIterator;
-use bytes::Bytes;
+use bytes::{Buf, BufMut, Bytes};
+use crate::utils::two_u8_to_u16;
 
 pub const SIZEOF_U16: usize = std::mem::size_of::<u16>();
 
@@ -16,11 +17,25 @@ pub struct Block {
 
 impl Block {
     pub fn encode(&self) -> Bytes {
-        unimplemented!()
+        let mut buf = self.data.clone();
+        for offset in &self.offsets {
+            buf.put_u16(*offset);
+        }
+        buf.put_u16(self.offsets.len() as u16);
+        buf.into()
     }
 
-    pub fn decode(data: &[u8]) -> Self {
-        unimplemented!()
+    pub fn decode(buf: &[u8]) -> Self {
+        let num_of_elements = two_u8_to_u16(&buf[(buf.len() - SIZEOF_U16)..]) as usize;
+        let offsets_raw = &buf[(buf.len() - SIZEOF_U16 - num_of_elements * SIZEOF_U16)..(buf.len() - SIZEOF_U16)];
+        let offsets = offsets_raw
+            .chunks(SIZEOF_U16)
+            .map(|s| two_u8_to_u16(s))
+            .collect();
+        Self {
+            data: buf[..(buf.len() - SIZEOF_U16 - num_of_elements * SIZEOF_U16)].to_vec(),
+            offsets,
+        }
     }
 }
 
