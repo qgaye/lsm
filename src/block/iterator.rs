@@ -22,14 +22,14 @@ impl BlockIterator {
         }
     }
 
-    /// Creates a block iterator and seek to the first entry.
+    /// Creates a block iterators and seek to the first entry.
     pub fn create_and_seek_to_first(block: Arc<Block>) -> Self {
         let mut iter = Self::new(block);
         iter.seek_to_first();
         iter
     }
 
-    /// Creates a block iterator and seek to the first key that >= `key`.
+    /// Creates a block iterators and seek to the first key that >= `key`.
     pub fn create_and_seek_to_key(block: Arc<Block>, key: &[u8]) -> Self {
         let mut iter = Self::new(block);
         iter.seek_to_key(key);
@@ -46,7 +46,7 @@ impl BlockIterator {
         &self.value
     }
 
-    /// Returns true if the iterator is valid.
+    /// Returns true if the iterators is valid.
     pub fn is_valid(&self) -> bool {
         self.idx < self.block.offsets.len() && !self.key.is_empty()
     }
