@@ -14,9 +14,7 @@ pub use iterator::SsTableIterator;
 
 use crate::block::Block;
 use crate::lsm_storage::BlockCache;
-use crate::utils::two_u8_to_u16;
-
-pub const SIZE_OF_USIZE: usize = 4;
+use crate::utils::{SIZEOF_U16, SIZEOF_USIZE, two_u8_to_u16};
 
 #[derive(Clone, Debug, PartialEq, Eq)]
 pub struct BlockMeta {
@@ -34,8 +32,8 @@ impl BlockMeta {
     ) {
         let mut estimated_size = 0;
         for meta in block_meta {
-            estimated_size += std::mem::size_of::<usize>(); // offset
-            estimated_size += std::mem::size_of::<u16>(); // first_key_len
+            estimated_size += SIZEOF_USIZE; // offset
+            estimated_size += SIZEOF_U16; // first_key_len
             estimated_size += meta.first_key.len();
         }
         buf.reserve(estimated_size);
@@ -101,9 +99,9 @@ impl SsTable {
     /// Open SSTable from a file.
     pub fn open(id: usize, block_cache: Option<Arc<BlockCache>>, file: FileObject) -> Result<Self> {
         let len = file.size() as usize;
-        let mut offset_bytes = file.read((len - SIZE_OF_USIZE) as u64, SIZE_OF_USIZE as u64)?;
+        let mut offset_bytes = file.read((len - SIZEOF_USIZE) as u64, SIZEOF_USIZE as u64)?;
         let block_meta_offset = (&offset_bytes[..]).get_u32() as usize;
-        let meta_bytes = file.read(block_meta_offset as u64, (len - SIZE_OF_USIZE - block_meta_offset) as u64)?;
+        let meta_bytes = file.read(block_meta_offset as u64, (len - SIZEOF_USIZE - block_meta_offset) as u64)?;
         Ok(Self {
             file,
             block_metas: BlockMeta::decode_block_meta(&meta_bytes[..]),
