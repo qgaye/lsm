@@ -13,7 +13,7 @@ pub struct BlockIterator {
 }
 
 impl BlockIterator {
-    fn new(block: Arc<Block>) -> Self {
+    pub fn new(block: Arc<Block>) -> Self {
         Self {
             block,
             key: Vec::new(),
@@ -48,7 +48,7 @@ impl BlockIterator {
 
     /// Returns true if the iterators is valid.
     pub fn is_valid(&self) -> bool {
-        self.idx < self.block.offsets.len() && !self.key.is_empty()
+        !self.key.is_empty()
     }
 
     /// Seeks to the first key in the block.

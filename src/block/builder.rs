@@ -27,7 +27,7 @@ impl BlockBuilder {
         let entry_total_size = self.entry_size(key, value) + SIZEOF_U16; /* offset size */
         if self.occupy_size + entry_total_size > self.block_size - SIZEOF_U16 /* num_of_elements */
             && !self.is_empty() /* first key always can set */ {
-            println!("over block size, key: {:?}, block_size: {:?}", key, self.block_size);
+            // println!("over block size, key: {:?}, block_size: {:?}", key, self.block_size);
             return false;
         }
         let offset = self.data.len();
