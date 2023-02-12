@@ -1,6 +1,9 @@
 use bytes::Bytes;
 use lsm::iterators::StorageIterator;
 use lsm::iterators::two_merge_iterator::TwoMergeIterator;
+use crate::iterator_mock::MockIterator;
+
+mod iterator_mock;
 
 fn check_iter_result(iter: impl StorageIterator, expected: Vec<(Bytes, Bytes)>) {
     let mut iter = iter;

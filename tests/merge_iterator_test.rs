@@ -1,6 +1,10 @@
 use bytes::Bytes;
 use lsm::iterators::merge_iterator::MergeIterator;
 use lsm::iterators::StorageIterator;
+use anyhow::Result;
+use crate::iterator_mock::MockIterator;
+
+mod iterator_mock;
 
 fn as_bytes(x: &[u8]) -> Bytes {
     Bytes::copy_from_slice(x)
