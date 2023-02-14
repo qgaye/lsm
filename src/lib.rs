@@ -1,3 +1,5 @@
+extern crate core;
+
 pub mod block;
 pub mod table;
 pub mod lsm_storage;

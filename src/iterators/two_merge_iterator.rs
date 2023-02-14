@@ -17,11 +17,11 @@ impl<A: StorageIterator, B: StorageIterator> TwoMergeIterator<A, B> {
 }
 
 impl<A: StorageIterator, B: StorageIterator> StorageIterator for TwoMergeIterator<A, B> {
-    fn key(&self) -> &[u8] {
+    fn value(&self) -> &[u8] {
         unimplemented!()
     }
 
-    fn value(&self) -> &[u8] {
+    fn key(&self) -> &[u8] {
         unimplemented!()
     }
 
