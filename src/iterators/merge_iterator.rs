@@ -90,6 +90,24 @@ impl<I: StorageIterator> StorageIterator for MergeIterator<I> {
             .unwrap_or(false)
     }
 
+    // iters: [
+    //   (
+    //     ("a", "1"), ("b", "2")
+    //   ), // iter1
+    //   (
+    //     ("b", "3"), ("c", "4")
+    //   )  // iter2
+    // ]
+    // heap: [(0, iter1(key: "a")), (1, iter2(key: "b"))]
+    // ========== key: "a", value: "1" ===========
+    // heap: [(1, iter2(key: "b"))]
+    // current: iter1(key: "a")
+    // ========== key: "b", value: "2" ===========
+    // heap: [(1, iter2(key: "b"))]
+    // current: iter1(key: "b")
+    // ========== key: "c", value: "4" ===========
+    // heap: []
+    // current: iter2(key: "c")
     fn next(&mut self) -> Result<()> {
         let current = self.current.as_mut().unwrap();
         // Pop the item out of the heap if they have the same value.
