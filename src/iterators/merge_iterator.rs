@@ -139,7 +139,7 @@ impl<I: StorageIterator> StorageIterator for MergeIterator<I> {
         // Otherwise, compare with heap top and swap if necessary.
         if let Some(mut iter) = self.iters.peek_mut() {
             // current key & idx smaller than iter, swap
-            // if condition need reverse, because heap is MaxHeap
+            // the if condition need reverse, because heap is MaxHeap
             if !(*current >= *iter) {
                 // heap.pop(); then heap.push(current);
                 std::mem::swap(current, &mut *iter);
