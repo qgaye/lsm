@@ -109,6 +109,8 @@ impl LsmStorage {
         assert!(!value.is_empty(), "value cannot be empty");
         assert!(!key.is_empty(), "key cannot be empty");
 
+        // the skipList in MemTable is concurrency safe, so read lock here is enough
+        // and change memTable to imm_memtables use write lock, ensure that no put() called in sync()
         let guard = self.inner.read();
         guard.memtable.put(key, value);
 
