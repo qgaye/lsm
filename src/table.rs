@@ -88,6 +88,8 @@ pub struct SsTable {
     pub file: FileObject,
     pub block_metas: Vec<BlockMeta>,
     pub block_meta_offset: usize,
+    id: usize,
+    block_cache: Option<Arc<BlockCache>>,
 }
 
 impl SsTable {
@@ -106,6 +108,8 @@ impl SsTable {
             file,
             block_metas: BlockMeta::decode_block_meta(&meta_bytes[..]),
             block_meta_offset,
+            id,
+            block_cache,
         })
     }
 

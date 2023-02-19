@@ -56,7 +56,7 @@ impl MemTable {
     }
 }
 
-fn map_bound(bound: Bound<&[u8]>) -> Bound<Bytes> {
+pub fn map_bound(bound: Bound<&[u8]>) -> Bound<Bytes> {
     match bound {
         Bound::Included(x) => Bound::Included(Bytes::copy_from_slice(x)),
         Bound::Excluded(x) => Bound::Excluded(Bytes::copy_from_slice(x)),
