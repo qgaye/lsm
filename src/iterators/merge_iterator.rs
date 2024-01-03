@@ -108,6 +108,12 @@ impl<I: StorageIterator> StorageIterator for MergeIterator<I> {
     // ========== key: "c", value: "4" ===========
     // heap: []
     // current: iter2(key: "c")
+
+    // 1、堆的排序规则：key小的优先，同样key，所在iter小的优先
+    // 2、next：如果堆顶的iter和current的key相同，则堆顶iter.next，如果iter.next到底了则pop出堆
+    // 3、current.next
+    // 4、如果current无效，则从堆pop置为新current，返回
+    // 5、反之，则和堆顶比较，如果堆顶的小于current（key&iter顺序），则置换current（pop&push）
     fn next(&mut self) -> Result<()> {
         let current = self.current.as_mut().unwrap();
         // Pop the item out of the heap if they have the same value.
